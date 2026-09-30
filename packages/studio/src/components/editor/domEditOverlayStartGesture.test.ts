@@ -20,22 +20,23 @@ const PRESS = {
   currentTarget: { setPointerCapture() {} },
 };
 
-/** Presses a drag on the element and returns the gesture it started. */
-function pressDrag(element: HTMLElement): GestureState | null {
+/** Presses a drag or resize on the element and returns the gesture it started. */
+function pressGesture(element: HTMLElement, kind: "drag" | "resize" = "drag"): GestureState | null {
   const opts = pressOptions(element);
   expect(
-    createDomEditOverlayGestureHandlers(opts as never).startGesture("drag", PRESS as never),
+    createDomEditOverlayGestureHandlers(opts as never).startGesture(kind, PRESS as never),
   ).toBe(true);
   return opts.gestureRef.current;
 }
 
 function pressOptions(element: HTMLElement) {
   const ref = <T>(current: T) => ({ current });
-  const selection = { element, capabilities: { canApplyManualOffset: true } };
+  const capabilities = { canApplyManualOffset: true, canApplyManualSize: true };
+  const selection = { element, capabilities };
   return {
     selectionRef: ref(selection as unknown as DomEditSelection),
     overlayRectRef: ref({ left: 0, top: 0, width: 240, height: 160, editScaleX: 1, editScaleY: 1 }),
-    boxRef: ref(null),
+    boxRef: ref(document.createElement("div")),
     overlayRef: ref(null),
     iframeRef: ref(null),
     gestureRef: ref<GestureState | null>(null),
@@ -45,13 +46,14 @@ function pressOptions(element: HTMLElement) {
   };
 }
 
-describe("a drag press on a page that loads GSAP", () => {
+describe("a drag or resize press on a page that loads GSAP", () => {
   it.each([
-    ["GSAP animates nothing", false],
-    ["GSAP animates only its parent", true],
-  ])(
-    "%s: the press never asks GSAP about the element, so its translate stays CSS",
-    (_, parentTween) => {
+    ["drag", "GSAP animates nothing", false],
+    ["drag", "GSAP animates only its parent", true],
+    ["resize", "GSAP animates nothing", false],
+  ] as const)(
+    "%s, %s: the press never asks GSAP about the element, so its translate stays CSS",
+    (kind, _, parentTween) => {
       const getProperty = vi.fn(() => 0);
       const set = vi.fn();
       const parent = document.createElement("div");
@@ -62,7 +64,7 @@ describe("a drag press on a page that loads GSAP", () => {
       const tween = { targets: () => [parent], vars: { x: 100 }, duration: () => 2 };
       const timelines = { main: { getChildren: () => (parentTween ? [tween] : []) } };
       Object.assign(window, { gsap: { getProperty, set }, __timelines: timelines });
-      expect(pressDrag(element)?.pathOffsetMember?.plainTranslate).toBe(true);
+      expect(pressGesture(element, kind)?.pathOffsetMember?.plainTranslate).toBe(true);
       expect(getProperty).not.toHaveBeenCalled();
       expect(set).not.toHaveBeenCalled();
       expect(element.style.getPropertyValue("translate")).toBe("40px 30px");
@@ -77,7 +79,7 @@ describe("a drag press on a centred element without GSAP", () => {
       "position: absolute; left: 50%; top: 50%; width: 240px; height: 160px; translate: -50% -50%";
     document.body.append(element);
     const style = element.getAttribute("style");
-    expect(pressDrag(element)?.pathOffsetMember?.initialOffset).toEqual({ x: -120, y: -80 });
+    expect(pressGesture(element)?.pathOffsetMember?.initialOffset).toEqual({ x: -120, y: -80 });
     expect(element.getAttribute("style")).toBe(style);
   });
 });

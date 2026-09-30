@@ -11,7 +11,7 @@ import {
   type StudioPathOffsetSnapshot,
 } from "./manualEdits";
 import { computeDraggedGsapPosition } from "../../hooks/draggedGsapPosition";
-import { gsapWritesPosition } from "../../hooks/gsapRuntimeKeyframes";
+import { gsapWritesBox, gsapWritesPosition } from "../../hooks/gsapRuntimeKeyframes";
 import { readTranslatePx, UNREADABLE_TRANSLATE, writeTranslatePx } from "./plainTranslate";
 
 interface OffsetDragGsap {
@@ -337,11 +337,11 @@ export function createManualOffsetDragMember(input: {
   selection: DomEditSelection;
   element: HTMLElement;
   rect: ManualOffsetDragRect;
-  gesture?: "drag" | "nudge"; // a resize's anchor member keeps the legacy offset channel
+  gesture?: "drag" | "nudge" | "resize"; // resize: the anchor that keeps its centre planted
 }): ManualOffsetDragMemberResult {
-  const plainTranslate = !!input.gesture && !gsapWritesPosition(input.element);
-  // Base the drag on the offset ACTUALLY applied, never a dormant var (readAppliedStudioPathOffset),
-  // so a stale offset can't fling the element off-screen.
+  const gsapOwns = input.gesture === "resize" ? gsapWritesBox : gsapWritesPosition;
+  const plainTranslate = !!input.gesture && !gsapOwns(input.element);
+  // The APPLIED offset, never a dormant var, so a stale one can't fling the element off-screen.
   const initialOffset = plainTranslate
     ? readTranslatePx(input.element)
     : readAppliedStudioPathOffset(input.element);

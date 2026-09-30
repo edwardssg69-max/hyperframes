@@ -216,6 +216,8 @@ describe("useDomGeometryCommit, from the package entry", () => {
     const showToast = vi.fn();
     const restore = vi.fn();
     const { element, recordEdit, hook, unmount } = renderHost({ showToast });
+    // GSAP renders the card's transform, so its resize reads animations first.
+    Object.assign(element, { _gsap: { renderTransform: () => undefined } });
 
     await expect(
       hook().commitBoxSize(

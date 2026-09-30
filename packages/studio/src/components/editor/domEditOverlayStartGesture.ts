@@ -2,9 +2,9 @@
  * Gesture-begin functions: startGroupDrag and startGesture.
  * These are pure "start a new gesture" operations — no draft rect updates.
  */
-import { readElementGsapNumber } from "../../utils/elementGsap";
 import { type DomEditSelection } from "./domEditing";
 import {
+  applyManualOffsetDragDraft,
   createManualOffsetDragMember,
   readGsapRotation,
   restoreManualOffsetDragMembers,
@@ -171,18 +171,6 @@ export function startGesture(
     Number.isFinite(rawContentScaleX) && rawContentScaleX > 0 ? rawContentScaleX : 1;
   const contentScaleY =
     Number.isFinite(rawContentScaleY) && rawContentScaleY > 0 ? rawContentScaleY : 1;
-  let resizeAnchor: GestureState["resizeAnchor"];
-  if (kind === "resize") {
-    const startBcr = sel.element.getBoundingClientRect();
-    resizeAnchor = {
-      anchorX: startBcr.x,
-      anchorY: startBcr.y,
-      baseGsapX: readElementGsapNumber(sel.element, "x") ?? 0,
-      baseGsapY: readElementGsapNumber(sel.element, "y") ?? 0,
-      pinX: 0,
-      pinY: 0,
-    };
-  }
   let initialPathOffset = captureStudioPathOffset(sel.element);
   let manualEditDragToken: string | undefined;
   let pathOffsetMember: ManualOffsetDragMember | undefined;
@@ -205,11 +193,9 @@ export function startGesture(
     initialPathOffset = result.member.initialPathOffset;
     manualEditDragToken = result.member.gestureToken;
   } else {
-    // Center-anchored corner resize (CapCut model): the element scales about its
-    // CENTER, which stays planted. All four corners behave identically, so EVERY
-    // corner needs the manual-offset member that translates the element to re-pin
-    // its center per frame (the memberless else-branch is only a defensive fallback
-    // if member creation fails, e.g. the element can't take a manual offset).
+    // Center-anchored corner resize (CapCut model): the element scales about its planted CENTER,
+    // so every corner needs the member that re-pins the center per frame (the memberless
+    // branch is only a fallback for an element that can't take a manual offset).
     const needsAnchorOffset = kind === "resize" && sel.capabilities.canApplyManualOffset;
     if (needsAnchorOffset) {
       const result = createManualOffsetDragMember({
@@ -217,11 +203,14 @@ export function startGesture(
         selection: sel,
         element: sel.element,
         rect,
+        gesture: "resize",
       });
       if (result.ok) {
         pathOffsetMember = result.member;
         initialPathOffset = result.member.initialPathOffset;
         manualEditDragToken = result.member.gestureToken;
+        // Hold a % translate as the same px now, so a growing box can't drag it along mid-frame.
+        if (result.member.plainTranslate) applyManualOffsetDragDraft(result.member, 0, 0);
       } else {
         manualEditDragToken = beginStudioManualEditGesture(sel.element);
       }
@@ -285,7 +274,6 @@ export function startGesture(
     editScaleY: rect.editScaleY,
     contentScaleX,
     contentScaleY,
-    resizeAnchor,
     manualEditDragToken,
     snapContext,
     resizeHandle: kind === "resize" ? (options?.resizeHandle ?? "se") : undefined,

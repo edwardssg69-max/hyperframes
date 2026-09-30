@@ -54,8 +54,10 @@ function gsapPositioned(tag: string): HTMLElement {
 function mountResizeHandler(
   animations: GsapAnimation[],
   targetAnimations: GsapAnimation[] = animations,
+  gsapOwnsBox = true,
+  hasGsapWriter = true,
 ) {
-  const element = document.createElement("div");
+  const element = gsapOwnsBox ? gsapPositioned("div") : document.createElement("div");
   const selection = { element, id: "clip", selector: "#clip" } as unknown as DomEditSelection;
   const fallback = vi.fn().mockResolvedValue(undefined);
   const anchorSave = vi.fn().mockResolvedValue(undefined);
@@ -63,6 +65,7 @@ function mountResizeHandler(
   const elementOffset = vi.fn(() => ({ save: anchorSave, rollback: anchorRollback }));
   const commitMutation = vi.fn().mockResolvedValue(undefined);
   const commitPatch = vi.fn().mockResolvedValue(undefined);
+  const fetchAnimations = vi.fn(() => vi.fn().mockResolvedValue(targetAnimations));
   let resize:
     | ((
         selection: DomEditSelection,
@@ -76,11 +79,11 @@ function mountResizeHandler(
     const editing = useGsapAwareEditing({
       domEditSelection: selection,
       selectedGsapAnimations: animations,
-      gsapCommitMutation: commitMutation,
+      gsapCommitMutation: hasGsapWriter ? commitMutation : null,
       previewIframeRef: { current: null },
       showToast: vi.fn(),
       bumpGsapCache: vi.fn(),
-      makeFetchFallback: () => vi.fn().mockResolvedValue(targetAnimations),
+      makeFetchFallback: fetchAnimations,
       trackGsapInteractionFailure: vi.fn(),
       stageElementPositionOffset: elementOffset,
       handleDomBoxSizeCommit: fallback,
@@ -103,6 +106,7 @@ function mountResizeHandler(
     anchorRollback,
     commitMutation,
     commitPatch,
+    fetchAnimations,
     resize: resize!,
     property: property!,
     root,
@@ -249,6 +253,36 @@ describe("useGsapAwareEditing anchored resize", () => {
       expect.any(Function),
       expect.any(Function),
     );
+    act(() => h.root.unmount());
+  });
+
+  it("resizes a box GSAP does not own through the CSS writer, with no GSAP write or fetch", async () => {
+    const h = mountResizeHandler([], [], false);
+    const restore = vi.fn();
+    await act(() =>
+      h.resize(h.selection, { width: 300, height: 200 }, { x: -50.5, y: -25 }, restore),
+    );
+    expect(h.fallback).toHaveBeenCalledWith(
+      h.selection,
+      { width: 300, height: 200 },
+      { x: -50.5, y: -25 },
+      restore,
+    );
+    expect(mocks.resize).not.toHaveBeenCalled();
+    expect(mocks.drag).not.toHaveBeenCalled();
+    expect(h.commitMutation).not.toHaveBeenCalled();
+    expect(h.fetchAnimations).not.toHaveBeenCalled();
+    act(() => h.root.unmount());
+  });
+
+  it("fails a GSAP-owned resize loudly when there is no GSAP writer, never writing CSS", async () => {
+    const h = mountResizeHandler([], [], true, false);
+    const restore = vi.fn();
+    await expect(
+      act(() => h.resize(h.selection, { width: 300, height: 200 }, undefined, restore)),
+    ).rejects.toThrow("no GSAP writer");
+    expect(h.fallback).not.toHaveBeenCalled();
+    expect(restore).toHaveBeenCalledTimes(1);
     act(() => h.root.unmount());
   });
 

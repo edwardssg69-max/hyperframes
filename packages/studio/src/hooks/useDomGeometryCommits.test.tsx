@@ -175,6 +175,61 @@ describe("useDomGeometryCommits element position offset", () => {
   });
 });
 
+describe("useDomGeometryCommits resize anchor", () => {
+  it("saves the anchor as the element's own plain px translate, sub-pixel, with the size", async () => {
+    const element = document.createElement("div");
+    element.id = "anchored";
+    element.style.setProperty("translate", "40px 30px");
+    document.body.append(element);
+    const selection = {
+      id: "anchored",
+      selector: "#anchored",
+      element,
+    } as unknown as DomEditSelection;
+    const commit = vi
+      .fn<UseDomGeometryCommitsParams["commitPositionPatchToHtml"]>()
+      .mockResolvedValue(undefined);
+    const { commits, unmount } = mountCommits(commit);
+
+    await commits().handleDomBoxSizeCommit(
+      selection,
+      { width: 340, height: 227 },
+      { x: -10.25, y: 3.5 },
+    );
+
+    expect(commit).toHaveBeenCalledTimes(1);
+    const patches = commit.mock.calls[0]![1];
+    expect(patches).toContainEqual({ type: "inline-style", property: "width", value: "340px" });
+    expect(patches).toContainEqual({
+      type: "inline-style",
+      property: "translate",
+      value: "-10.25px 3.5px",
+    });
+    expect(patches.some((p) => p.property.startsWith("--hf-studio-offset"))).toBe(false);
+    expect(element.style.getPropertyValue("translate")).toBe("-10.25px 3.5px");
+    unmount();
+  });
+});
+
+describe("useDomGeometryCommits resize rollback", () => {
+  it("rolls the whole gesture back once when the resize save fails", async () => {
+    const element = document.createElement("div");
+    document.body.append(element);
+    const selection = { id: "r", selector: "#r", element } as unknown as DomEditSelection;
+    const failure = new Error("save failed");
+    const commit = vi
+      .fn<UseDomGeometryCommitsParams["commitPositionPatchToHtml"]>()
+      .mockRejectedValue(failure);
+    const restore = vi.fn();
+    const { commits, unmount } = mountCommits(commit);
+    await expect(
+      commits().handleDomBoxSizeCommit(selection, { width: 50, height: 40 }, undefined, restore),
+    ).rejects.toBe(failure);
+    expect(restore).toHaveBeenCalledTimes(1);
+    unmount();
+  });
+});
+
 describe("useDomGeometryCommits resize of a cropped element", () => {
   it("saves the crop scaled per axis with the box in the resize's own commit", async () => {
     const element = withInlineLayoutBox(document.createElement("div"));

@@ -446,6 +446,11 @@ export function gsapWritesPosition(el: Element): boolean {
   return !!cache?.renderTransform || gsapWritesChannels(el, MOVE_CHANNELS);
 }
 
+/** GSAP owns this element's box: its position, or its width or height. Else a resize writes CSS. */
+export function gsapWritesBox(el: Element): boolean {
+  return gsapWritesPosition(el) || gsapWritesChannels(el, ["width", "height"]);
+}
+
 /** `hasNonHoldTweenForElement` for an element in hand, read from its own window's timelines. */
 export function elementHasNonHoldTween(el: Element, channels?: string[]): boolean {
   const win = el.ownerDocument.defaultView as {

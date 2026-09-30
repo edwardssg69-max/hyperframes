@@ -16,6 +16,7 @@ import {
 } from "../components/editor/manualEdits";
 import { stageElementOffset } from "./elementOffsetStager";
 import { prepareCropResize } from "../components/editor/cropResize";
+import { translatePatch, writeTranslatePx } from "../components/editor/plainTranslate";
 import {
   buildPathOffsetPatches,
   buildBoxSizePatches,
@@ -98,38 +99,35 @@ export function useDomGeometryCommits({
       selection: DomEditSelection,
       next: { width: number; height: number },
       offset?: { x: number; y: number },
+      restore?: () => void,
     ) => {
       if (readOnlyPreview) return Promise.resolve();
-      const gsapFallback = rejectGsapCssFallback(selection, previewIframeRef, showToast);
-      if (gsapFallback) return gsapFallback;
-      const beforeSize = captureStudioBoxSize(selection.element);
-      const beforeOffset = offset ? captureStudioPathOffset(selection.element) : null;
-      const stageCrop = prepareCropResize(selection.element);
-      applyStudioBoxSize(selection.element, next);
+      const element = selection.element;
+      const beforeSize = captureStudioBoxSize(element);
+      const beforeTranslate = element.style.getPropertyValue("translate");
+      const stageCrop = prepareCropResize(element);
+      applyStudioBoxSize(element, next);
       const crop = stageCrop();
-      // Anchored-corner resize (NW/NE/SW) also moves the element to keep the
-      // opposite corner fixed. Apply the offset and emit BOTH patch sets in a
-      // SINGLE commit: one persist = one undo entry, and there is no
-      // intermediate re-stamp where the new size is in source but the anchor
-      // offset is not (that frame was the release "jump"). Both builders read
-      // the already-mutated live element, so concatenation is safe.
-      const patches = buildBoxSizePatches(selection.element);
+      // One commit, one undo entry: the size, the crop that follows it, and the translate
+      // (as a move writes it) that keeps the centre planted.
+      const patches = buildBoxSizePatches(element);
       if (crop) patches.push(crop.patch);
       if (offset) {
-        applyStudioPathOffset(selection.element, offset);
-        patches.push(...buildPathOffsetPatches(selection.element));
+        writeTranslatePx(element, offset);
+        patches.push(translatePatch(offset));
       }
       return commitPositionPatchToHtml(selection, patches, {
         label: "Resize layer box",
         coalesceKey: `box-size:${getDomEditTargetKey(selection)}`,
       }).catch((error) => {
-        restoreStudioBoxSize(selection.element, beforeSize);
-        if (beforeOffset) restoreStudioPathOffset(selection.element, beforeOffset);
+        restoreStudioBoxSize(element, beforeSize);
+        if (offset) element.style.setProperty("translate", beforeTranslate);
         crop?.revert();
+        restore?.();
         throw error;
       });
     },
-    [commitPositionPatchToHtml, previewIframeRef, showToast, readOnlyPreview],
+    [commitPositionPatchToHtml, readOnlyPreview],
   );
 
   const handleDomRotationCommit = useCallback(

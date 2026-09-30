@@ -652,3 +652,41 @@ describe("a move of an element GSAP does not position", () => {
     expect(member().plainTranslate).toBe(false);
   });
 });
+
+describe("a resize's anchor member", () => {
+  function anchorMember(tweenVars?: Record<string, number>) {
+    const window = new Window();
+    const element = window.document.createElement("div");
+    element.id = "box";
+    window.document.body.append(element);
+    const tweens = tweenVars ? [{ vars: tweenVars, targets: () => [element] }] : [];
+    Object.assign(window, { __timelines: { main: { getChildren: () => tweens } } });
+    element.getBoundingClientRect = () => {
+      const [x = 0, y = 0] = element.style
+        .getPropertyValue("translate")
+        .split(" ")
+        .map((v) => Number.parseFloat(v));
+      return new window.DOMRect(10 + (x || 0), 20 + (y || 0), 100, 50);
+    };
+    const result = createManualOffsetDragMember({
+      key: "box",
+      selection: { element } as never,
+      element,
+      rect: { left: 10, top: 20, width: 100, height: 50, editScaleX: 1, editScaleY: 1 },
+      gesture: "resize",
+    });
+    if (!result.ok) throw new Error("member");
+    return result.member;
+  }
+
+  it("keeps the centre with the element's own plain translate when GSAP does not own the box", () => {
+    const member = anchorMember();
+    expect(member.plainTranslate).toBe(true);
+    applyManualOffsetDragDraft(member, -10.25, 3.5);
+    expect(member.element.style.getPropertyValue("translate")).toBe("-10.25px 3.5px");
+  });
+
+  it("leaves a box whose size GSAP tweens to the GSAP writer", () => {
+    expect(anchorMember({ width: 300 }).plainTranslate).toBe(false);
+  });
+});
