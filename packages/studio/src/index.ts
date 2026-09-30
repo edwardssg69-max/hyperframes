@@ -27,6 +27,7 @@ export {
   liveTime,
   formatTime,
 } from "./player";
+export { usePreviewIframeStore } from "./player/store/previewIframeStore";
 export type {
   PlayerHandle,
   PlayerHandleElement,
