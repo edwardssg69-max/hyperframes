@@ -28,6 +28,10 @@ export {
   formatTime,
 } from "./player";
 export { usePreviewIframeStore } from "./player/store/previewIframeStore";
+export {
+  openAudioGainDialog,
+  useAudioGainDialogStore,
+} from "./player/components/audioGainDialogStore";
 export type {
   PlayerHandle,
   PlayerHandleElement,
