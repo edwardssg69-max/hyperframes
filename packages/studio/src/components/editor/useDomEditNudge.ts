@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, type RefObject } from "react";
 import { useMountEffect } from "../../hooks/useMountEffect";
 import { isTypingTarget } from "../../utils/typingTarget";
 import { acquireCanvasNudgeKeys } from "../../utils/canvasNudgeGate";
+import { addStudioPendingEditFlushListener } from "../../utils/studioPendingEdits";
 import type { DomEditSelection } from "./domEditing";
 import {
   type GroupOverlayItem,
@@ -141,9 +142,9 @@ export function useDomEditNudge(params: UseDomEditNudgeParams): { flushNudge: ()
   // Commit the pending burst: one source write per burst = one undo entry.
   // Mirrors the drag's onPointerUp — same commit callbacks, same failure
   // restore, same member teardown.
-  const commitSession = () => {
+  const commitSession = (): Promise<unknown> | undefined => {
     const session = sessionRef.current;
-    if (!session) return;
+    if (!session) return undefined;
     sessionRef.current = null;
     if (session.timer) clearTimeout(session.timer);
     const updates: DomEditGroupPathOffsetCommit[] = session.members.map((member) => ({
@@ -154,7 +155,7 @@ export function useDomEditNudge(params: UseDomEditNudgeParams): { flushNudge: ()
     const commit = session.isGroup
       ? p.onGroupPathOffsetCommitRef.current(updates)
       : p.onPathOffsetCommitRef.current(updates[0].selection, updates[0].next);
-    void Promise.resolve(commit)
+    return Promise.resolve(commit)
       .catch(() => {
         for (const member of session.members) {
           if (isStudioManualEditGestureCurrent(member.element, member.gestureToken)) {
@@ -224,8 +225,11 @@ export function useDomEditNudge(params: UseDomEditNudgeParams): { flushNudge: ()
     // Capture, like the other app-level key handlers, so a focused panel
     // can't swallow the nudge before it reaches us.
     window.addEventListener("keydown", listener, true);
+    // Undo drains pending edits first: a burst still inside its debounce is the edit on screen.
+    const stopFlush = addStudioPendingEditFlushListener(() => commitSessionRef.current());
     return () => {
       window.removeEventListener("keydown", listener, true);
+      stopFlush();
       commitSessionRef.current();
     };
   });
@@ -238,7 +242,7 @@ export function useDomEditNudge(params: UseDomEditNudgeParams): { flushNudge: ()
   const selectionKey = selectionIdentityKey(params.selection);
   const groupSelectionsKey = groupSelectionsIdentityKey(params.groupSelections);
   // eslint-disable-next-line no-restricted-syntax
-  useEffect(() => () => commitSessionRef.current(), [selectionKey, groupSelectionsKey]);
+  useEffect(() => () => void commitSessionRef.current(), [selectionKey, groupSelectionsKey]);
 
   // Claim the arrow keys from the playback frame-step while the selection is
   // nudgeable (see canvasNudgeGate — listener order is mount-dependent, so
