@@ -232,9 +232,15 @@ export function hasDomEditRotationChanged(initialAngle: number, nextAngle: numbe
 // These live here (rather than in DomEditOverlay.tsx or useDomEditOverlayGestures.ts)
 // to break circular imports between those files.
 
+export interface MoveCommitOptions {
+  altKey?: boolean;
+  plainTranslate?: boolean;
+}
+
 export interface DomEditGroupPathOffsetCommit {
   selection: DomEditSelection;
   next: { x: number; y: number };
+  plainTranslate?: boolean;
 }
 
 // Refs are stable across renders; values are read via .current.
@@ -259,7 +265,7 @@ export type UseDomEditOverlayGesturesOptions = {
     (
       s: DomEditSelection,
       n: { x: number; y: number },
-      m?: { altKey?: boolean },
+      m?: MoveCommitOptions,
     ) => Promise<unknown> | void
   >;
   onGroupPathOffsetCommitRef: RefObject<
