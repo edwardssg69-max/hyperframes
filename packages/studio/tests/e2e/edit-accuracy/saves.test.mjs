@@ -1,5 +1,8 @@
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { saveFault } from "./case.mjs";
+import { saveFault, timedWrite } from "./case.mjs";
 import { score } from "./report.mjs";
 
 const measured = (undoTimeout) => ({
@@ -42,5 +45,14 @@ describe("undo and redo saves", () => {
     expect(score({}, measured(null)).checks.undo).toBe(true);
     expect(score({}, measured("undo late")).checks.undo).toBe(false);
     expect(score({}, measured("redo lost")).checks.undo).toBe(false);
+  });
+
+  it("calls a write late only past 15 s from the key", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "edit-bench-save-"));
+    writeFileSync(join(dir, "index.html"), "after");
+    const ctx = { dir, files: ["index.html"] };
+    const from = { "index.html": "before" };
+    expect((await timedWrite(ctx, from, Date.now() - 14_000)).late).toBe(false);
+    expect((await timedWrite(ctx, from, Date.now() - 16_000)).late).toBe(true);
   });
 });

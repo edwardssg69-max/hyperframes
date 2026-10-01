@@ -542,6 +542,8 @@ export async function controlDrag(browser, gesture) {
     const page = await context.newPage();
     await page.setViewport(VIEWPORT);
     await page.evaluateOnNewDocument(instrumentPage);
+    // The real drags run the frame sampler, so the control pays its cost too.
+    await page.evaluateOnNewDocument(frameSampler);
     await page.goto(CONTROL_PAGE);
     const box = await page.$("#box");
     const ctx = { page, handles: { target: box, root: box } };
@@ -556,6 +558,7 @@ export async function controlDrag(browser, gesture) {
       return smoothness(await recording(page, false));
     }
     await page.mouse.move(700, 380);
+    await startFrames(page, "#box");
     await page.mouse.down();
     await nextFrame(page);
     await read();
@@ -567,6 +570,7 @@ export async function controlDrag(browser, gesture) {
     }
     const smooth = smoothness(await recording(page, false));
     await page.mouse.up();
+    await stopFrames(page);
     return smooth;
   } finally {
     await context.close().catch(() => undefined);
@@ -738,7 +742,7 @@ async function measureCase(
       frames: drive.errors.length,
     },
     pressJump: drive.pressJump,
-    teleport: spec.gesture === "nudge" ? null : scoreTeleport(spec.gesture, frames),
+    teleport: spec.gesture === "nudge" ? null : scoreTeleport(spec.gesture, frames[0] ?? []),
     drop: quadDistance(drive.lastQuad, committed.visible),
     // Also against the box the gesture left, so a write the file drops shows here and not only as drop.
     reload: Math.max(
