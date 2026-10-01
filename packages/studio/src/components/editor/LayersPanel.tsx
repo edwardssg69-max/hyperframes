@@ -496,7 +496,7 @@ export const LayersPanel = memo(function LayersPanel() {
                   selected
                     ? "bg-panel-accent/18 text-accent-ink"
                     : isCompHost
-                      ? "bg-panel-accent/40 text-accent-ink"
+                      ? "bg-on text-accent-ink"
                       : "bg-panel-hover text-panel-text-4"
                 }`}
               >

@@ -72,6 +72,7 @@
   --color-playhead: var(--color-text-0);
   --color-danger: oklch(0.56 0.19 25);
   --color-danger-ink: light-dark(oklch(0.5 0.17 25), oklch(0.791 0.12 25));
+  --color-warning-ink: light-dark(oklch(0.5 0.12 70), oklch(82.8% 0.189 84.429));
   --color-on-danger: oklch(1 0 0);
   --color-media: light-dark(oklch(0.5 0.1 215), #00e3ff);
   --color-container: light-dark(oklch(0.55 0.13 70), #f5a623);
@@ -155,7 +156,10 @@
     color-mix(in oklab, var(--color-text-0) 30%, transparent)
   );
   --timeline-clip-border-hover: color-mix(in oklab, var(--color-accent) 75%, transparent);
-  --timeline-clip-border-active: color-mix(in oklab, var(--color-accent) 55%, transparent);
+  --timeline-clip-border-active: light-dark(
+    color-mix(in oklab, var(--color-accent) 90%, transparent),
+    color-mix(in oklab, var(--color-accent) 55%, transparent)
+  );
   --timeline-handle: var(--color-text-0);
   /* Audio clip fades: the shaded wedge over the faded gain, and the corner dots. */
   --timeline-fade-shade: rgba(0, 0, 0, 0.38);
@@ -325,9 +329,9 @@
    * strip sits below the card body and the shown tab is a fill in the body colour. */
   --panel-shell-bg: var(--color-bg-1);
   --panel-card-bg: var(--color-surface);
-  --panel-card-border: #303034;
+  --panel-card-border: var(--color-border-strong);
   --panel-strip-bg: var(--color-bg-0);
-  --panel-tab-bg-hover: #202023;
+  --panel-tab-bg-hover: var(--color-hover);
 
   /* Names Studio's markup invented that no config ever defined, so the classes
    * compiled to nothing. Aliased to the token that was meant, rather than
@@ -340,14 +344,13 @@
   /* ------------------------------------------- deprecated: Tailwind palette */
 
   /* Stock colours markup still names, so `--color-*: initial` does not blank them. U12 deletes
-   * this block. The neutral scale is Graphite's roles, by the job each step does in markup: light
-   * steps are text, dark steps are surfaces and lines, so it follows the theme. The rest are
-   * verbatim Tailwind 4.3.3 defaults; `theme.test.ts` fails if one drifts from upstream. */
+   * this block. Neutral, white and the red and amber text steps are Graphite roles, by the job
+   * they do in markup, so they follow the theme; the rest are verbatim Tailwind 4.3.3 defaults. */
   --color-amber-50: oklch(98.7% 0.022 95.277);
   --color-amber-100: oklch(96.2% 0.059 95.617);
   --color-amber-200: oklch(92.4% 0.12 95.746);
-  --color-amber-300: oklch(87.9% 0.169 91.605);
-  --color-amber-400: oklch(82.8% 0.189 84.429);
+  --color-amber-300: var(--color-warning-ink);
+  --color-amber-400: var(--color-warning-ink);
   --color-amber-500: oklch(76.9% 0.188 70.08);
   --color-amber-900: oklch(41.4% 0.112 45.904);
   --color-amber-950: oklch(27.9% 0.077 45.635);
@@ -386,8 +389,8 @@
   --color-purple-900: oklch(38.1% 0.176 304.987);
   --color-red-100: oklch(93.6% 0.032 17.717);
   --color-red-200: oklch(88.5% 0.062 18.334);
-  --color-red-300: oklch(80.8% 0.114 19.571);
-  --color-red-400: oklch(70.4% 0.191 22.216);
+  --color-red-300: var(--color-danger-ink);
+  --color-red-400: var(--color-danger-ink);
   --color-red-500: oklch(63.7% 0.237 25.331);
   --color-red-600: oklch(57.7% 0.245 27.325);
   --color-red-700: oklch(50.5% 0.213 27.518);
@@ -405,16 +408,20 @@
   --color-sky-950: oklch(29.3% 0.066 243.157);
   --color-violet-400: oklch(70.2% 0.183 293.541);
   --color-violet-500: oklch(60.6% 0.25 292.717);
-  --color-white: #fff;
+  --color-white: var(--color-text-0);
 }
 
-/* The colour-scheme picks each token's light or dark half. A host, or Studio's own theme toggle,
- * sets data-theme="paper" on the document element for light. */
-:root {
-  color-scheme: dark;
+/* The colour-scheme picks each token's light or dark half: dark unless the document element
+ * has data-theme="paper". Base layer, so a host's own colour-scheme wins. */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  :root:where([data-theme="paper"]) {
+    color-scheme: light;
+  }
 }
 :root[data-theme="paper"] {
-  color-scheme: light;
   --timeline-clip-label-shadow: none;
   --timeline-clip-shadow: 0 2px 6px rgb(0 0 0 / 0.12);
   --timeline-thumbnail-shimmer: linear-gradient(

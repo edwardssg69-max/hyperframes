@@ -38,7 +38,7 @@ export function SidebarLintButton({
             style={hasError ? { animationIterationCount: ERROR_PULSES_BEFORE_IDLE } : undefined}
             className={
               hasError
-                ? "ml-1 min-w-[16px] rounded-full bg-panel-danger/25 px-1 text-[9px] font-bold text-danger-ink animate-pulse motion-reduce:animate-none"
+                ? "ml-1 min-w-[16px] rounded-full bg-danger px-1 text-[9px] font-bold text-on-danger animate-pulse motion-reduce:animate-none"
                 : "ml-1 min-w-[16px] rounded-full bg-amber-500/20 px-1 text-[9px] font-bold text-amber-400"
             }
           >

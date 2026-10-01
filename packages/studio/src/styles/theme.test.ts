@@ -128,7 +128,7 @@ describe("studio theme", () => {
     expect(css).toContain(".duration-open {");
   });
 
-  it("keeps every legacy Tailwind palette entry at its upstream default value", async () => {
+  it("keeps every legacy Tailwind palette entry that is not a role at its upstream value", async () => {
     // These are copies of Tailwind's own values, kept only so existing markup
     // renders unchanged. A Tailwind upgrade that moves one of them would
     // otherwise silently change Studio's colors.
@@ -141,7 +141,7 @@ describe("studio theme", () => {
     );
     const legacy = [
       ...themeSource.matchAll(/\n\s*(--color-[a-z]+-(?:50|\d00|950)):\s*([^;]+);/g),
-    ].filter(([, name]) => !name.startsWith("--color-neutral-"));
+    ].filter(([, , value]) => !value.trim().startsWith("var("));
 
     expect(legacy.length).toBeGreaterThan(0);
     for (const [, name, value] of legacy) {

@@ -200,7 +200,7 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose }:
           >
             {copiedAgentPrompt ? "Copied!" : "Copy to Agent"}
             {!copiedAgentPrompt && (
-              <span className="text-[9px] text-accent-ink/50 ml-1.5">Cmd+Enter</span>
+              <span className="text-[9px] text-text-muted ml-1.5">Cmd+Enter</span>
             )}
           </button>
         </div>

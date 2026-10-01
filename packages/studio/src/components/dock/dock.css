@@ -1,5 +1,11 @@
 @import "dockview-react/dist/styles/dockview.css";
 
+.dv-shell:has(.hf-dock) {
+  /* dockview's runtime stylesheet pins `color-scheme: dark` on its theme class, which sits on
+   * the shell around the dock. */
+  color-scheme: inherit;
+}
+
 .hf-dock {
   --dv-group-view-background-color: var(--panel-card-bg);
   --dv-tabs-and-actions-container-background-color: var(--panel-strip-bg);

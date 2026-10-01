@@ -164,7 +164,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
         {gridPopoverOpen && (
           <div
             ref={popoverRef}
-            className="absolute right-0 top-full mt-1 rounded-lg bg-neutral-800 border border-neutral-700 p-3 shadow-xl min-w-[180px]"
+            className="absolute right-0 top-full mt-1 rounded-lg bg-raised border border-border p-3 shadow-xl min-w-[180px]"
           >
             <label className="flex items-center justify-between text-xs text-white/80 mb-2">
               <span>Grid spacing</span>

@@ -355,7 +355,7 @@ export function FontRow({
         }`}
       >
         <div className="w-[50px] h-[32px] rounded-sm overflow-hidden bg-neutral-900 shrink-0 flex items-center justify-center">
-          <span className="text-[9px] font-medium text-neutral-700">{extension}</span>
+          <span className="text-[9px] font-medium text-text-off">{extension}</span>
         </div>
         <div className="min-w-0 flex-1">
           <span

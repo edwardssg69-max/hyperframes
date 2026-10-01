@@ -177,7 +177,7 @@ function EmptyState({
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
-        className="text-neutral-700"
+        className="text-text-off"
       >
         <path
           d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"

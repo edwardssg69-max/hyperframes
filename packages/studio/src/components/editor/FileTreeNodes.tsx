@@ -344,7 +344,7 @@ export function DeleteConfirm({
       <div className="flex gap-1.5">
         <button
           onClick={onCancel}
-          className="flex-1 px-2 py-1 rounded-sm bg-neutral-700 text-neutral-300 hover:bg-neutral-600 transition-colors"
+          className="flex-1 px-2 py-1 rounded-sm bg-hover text-neutral-300 hover:bg-press transition-colors"
         >
           Cancel
         </button>

@@ -60,7 +60,7 @@ export const buttonVariants: Record<ButtonVariant, string> = {
     "enabled:active:scale-[0.98] data-[preview-state=active]:scale-[0.98]",
   ),
   danger: cn(
-    "bg-danger text-text-0 font-medium",
+    "bg-danger text-on-danger font-medium",
     "enabled:hover:brightness-110 data-[preview-state=hover]:brightness-110",
     "enabled:active:scale-[0.98] data-[preview-state=active]:scale-[0.98]",
   ),

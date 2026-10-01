@@ -109,8 +109,8 @@ export function LintModal({
                 copied
                   ? "bg-green-600 text-white"
                   : copyFailed
-                    ? "bg-red-600 text-white"
-                    : "bg-studio-accent hover:bg-studio-accent/80 text-on-accent"
+                    ? "bg-danger text-on-danger"
+                    : "bg-accent hover:bg-accent-hover text-on-accent"
               }`}
             >
               {copied
@@ -128,39 +128,39 @@ export function LintModal({
             </div>
           )}
           {errors.map((f, i) => (
-            <div key={`e-${i}`} className="py-3 border-b border-neutral-800/50 last:border-0">
-              <div className="flex items-start gap-2">
-                <WarningIcon size={14} className="text-red-400 shrink-0 mt-0.5" weight="fill" />
-                <div className="min-w-0">
-                  <p className="text-sm text-neutral-200">{f.message}</p>
-                  {f.file && <p className="text-xs text-neutral-600 font-mono mt-0.5">{f.file}</p>}
-                  {f.fixHint && (
-                    <div className="flex items-start gap-1 mt-1.5">
-                      <CaretRightIcon size={10} className="text-accent-ink shrink-0 mt-0.5" />
-                      <p className="text-xs text-accent-ink">{f.fixHint}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <LintFindingRow key={`e-${i}`} finding={f} tone="error" />
           ))}
           {warnings.map((f, i) => (
-            <div key={`w-${i}`} className="py-3 border-b border-neutral-800/50 last:border-0">
-              <div className="flex items-start gap-2">
-                <WarningIcon size={14} className="text-amber-400 shrink-0 mt-0.5" />
-                <div className="min-w-0">
-                  <p className="text-sm text-neutral-300">{f.message}</p>
-                  {f.file && <p className="text-xs text-neutral-600 font-mono mt-0.5">{f.file}</p>}
-                  {f.fixHint && (
-                    <div className="flex items-start gap-1 mt-1.5">
-                      <CaretRightIcon size={10} className="text-accent-ink shrink-0 mt-0.5" />
-                      <p className="text-xs text-accent-ink">{f.fixHint}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <LintFindingRow key={`w-${i}`} finding={f} tone="warning" />
           ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LintFindingRow({ finding, tone }: { finding: LintFinding; tone: "error" | "warning" }) {
+  return (
+    <div className="py-3 border-b border-neutral-800/50 last:border-0">
+      <div className="flex items-start gap-2">
+        <WarningIcon
+          size={14}
+          className={`${tone === "error" ? "text-danger-ink" : "text-amber-400"} shrink-0 mt-0.5`}
+          weight={tone === "error" ? "fill" : "regular"}
+        />
+        <div className="min-w-0">
+          <p className={`text-sm ${tone === "error" ? "text-neutral-200" : "text-neutral-300"}`}>
+            {finding.message}
+          </p>
+          {finding.file && (
+            <p className="text-xs text-neutral-600 font-mono mt-0.5">{finding.file}</p>
+          )}
+          {finding.fixHint && (
+            <div className="flex items-start gap-1 mt-1.5">
+              <CaretRightIcon size={10} className="text-accent-ink shrink-0 mt-0.5" />
+              <p className="text-xs text-accent-ink">{finding.fixHint}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

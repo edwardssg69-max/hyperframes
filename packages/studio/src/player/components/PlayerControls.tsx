@@ -241,7 +241,7 @@ export const PlayerControls = memo(function PlayerControls({
             <span ref={timeDisplayRef}>{formatTime(0)}</span>
             {timeDisplayMode === "time" ? (
               <>
-                <span className="mx-0.5 text-neutral-700">/</span>
+                <span className="mx-0.5 text-text-off">/</span>
                 <span className="text-neutral-600">{formatTime(duration)}</span>
               </>
             ) : null}

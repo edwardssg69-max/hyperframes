@@ -89,21 +89,32 @@ function parsePair(input: unknown): ContrastPair {
     sources: strings(row.sources),
   };
 }
-export function parseManifest(text: string): ContrastTheme[] {
-  const themes = array(record(JSON.parse(text)).themes).map((input) => {
-    const theme = record(input);
-    return {
-      id: string(theme.id),
-      selectors: Array.isArray(theme.selector) ? strings(theme.selector) : [string(theme.selector)],
-      scheme: scheme(theme.scheme),
-      canvas: string(theme.canvas),
-      pairs: array(theme.pairs).map(parsePair),
-    };
-  });
+/** A theme's own pairs, or with `pairsFrom` the pairs of an earlier theme, measured in this one. */
+function themePairs(theme: Record<string, unknown>, earlier: ContrastTheme[]): ContrastPair[] {
+  if (theme.pairsFrom === undefined) return array(theme.pairs).map(parsePair);
+  const source = earlier.find((other) => other.id === theme.pairsFrom);
+  if (!source) throw new Error(`pairsFrom names no earlier theme: ${String(theme.pairsFrom)}`);
+  return source.pairs;
+}
+function uniquePairs(themes: ContrastTheme[]): ContrastTheme[] {
   const ids = themes.flatMap((theme) => theme.pairs.map((pair) => `${theme.id}/${pair.id}`));
   if (!ids.length || new Set(ids).size !== ids.length)
     throw new Error("Empty or duplicate contrast pairs");
   return themes;
+}
+export function parseManifest(text: string): ContrastTheme[] {
+  const themes: ContrastTheme[] = [];
+  for (const input of array(record(JSON.parse(text)).themes)) {
+    const theme = record(input);
+    themes.push({
+      id: string(theme.id),
+      selectors: strings([theme.selector].flat()),
+      scheme: scheme(theme.scheme),
+      canvas: string(theme.canvas),
+      pairs: themePairs(theme, themes),
+    });
+  }
+  return uniquePairs(themes);
 }
 export function parseBaseline(text: string): ContrastBaseline {
   return Object.fromEntries(
@@ -133,71 +144,90 @@ function rgbColor(value: string): Color {
     channel(parts[3] ?? "1", 1),
   ];
 }
-/** The comma-separated arguments of the function call `value` opens with, split at depth 0. */
-function callArgs(value: string, name: string): string[] | null {
-  if (!value.startsWith(`${name}(`) || !value.endsWith(")")) return null;
-  const args: string[] = [];
+/** Indexes of the commas in `inner` that sit outside any parentheses. */
+function topLevelCommas(inner: string): number[] {
   let depth = 0;
-  let start = name.length + 1;
-  for (let at = start; at < value.length - 1; at++) {
-    if (value[at] === "(") depth++;
-    else if (value[at] === ")") depth--;
-    else if (value[at] === "," && depth === 0) {
-      args.push(value.slice(start, at).trim());
-      start = at + 1;
-    }
-  }
-  if (depth !== 0) throw new Error(`Unbalanced color: ${value}`);
-  return [...args, value.slice(start, -1).trim()];
+  const commas: number[] = [];
+  [...inner].forEach((char, at) => {
+    depth += Number(char === "(") - Number(char === ")");
+    if (char === "," && depth === 0) commas.push(at);
+  });
+  if (depth !== 0) throw new Error(`Unbalanced color: ${inner}`);
+  return commas;
+}
+function callArgs(value: string, name: string): string[] | null {
+  const call = value.match(new RegExp(`^${name}\\(([\\s\\S]*)\\)$`));
+  if (!call) return null;
+  const bounds = [-1, ...topLevelCommas(call[1]!), call[1]!.length];
+  return bounds.slice(1).map((end, at) => call[1]!.slice(bounds[at]! + 1, end).trim());
+}
+function lightness(value: string): number {
+  return value.endsWith("%") ? Number(value.slice(0, -1)) / 100 : Number(value);
+}
+function encode(linearValue: number): number {
+  const c = Math.min(1, Math.max(0, linearValue));
+  return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+}
+const OKLCH = /^([\d.]+%?)\s+([\d.]+)\s+([\d.]+|none)(?:\s*\/\s*([\d.]+%?))?$/;
+function oklchParts(value: string): [number, number, number, number] {
+  const parts = value.trim().match(OKLCH);
+  if (!parts) throw new Error(`Invalid oklch color: ${value}`);
+  return [
+    lightness(parts[1]!),
+    Number(parts[2]),
+    Number(parts[3]) || 0,
+    channel(parts[4] ?? "1", 1),
+  ];
 }
 function oklchColor(value: string): Color {
-  const parts = value.trim().split(/[\s/]+/);
-  if (![3, 4].includes(parts.length)) throw new Error(`Invalid oklch color: ${value}`);
-  const lightness = parts[0]!.endsWith("%")
-    ? Number(parts[0]!.slice(0, -1)) / 100
-    : Number(parts[0]);
-  const [chroma, hue] = [Number(parts[1]), parts[2] === "none" ? 0 : Number(parts[2])];
-  const alpha = channel(parts[3] ?? "1", 1);
-  if (![lightness, chroma, hue].every(Number.isFinite))
-    throw new Error(`Invalid oklch color: ${value}`);
+  const [l0, chroma, hue, alpha] = oklchParts(value);
   const a = chroma * Math.cos((hue * Math.PI) / 180);
   const b = chroma * Math.sin((hue * Math.PI) / 180);
-  const l = (lightness + 0.3963377774 * a + 0.2158037573 * b) ** 3;
-  const m = (lightness - 0.1055613458 * a - 0.0638541728 * b) ** 3;
-  const s = (lightness - 0.0894841775 * a - 1.291485548 * b) ** 3;
-  const gamma = (x: number) => {
-    const c = Math.min(1, Math.max(0, x));
-    return c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
-  };
+  const l = (l0 + 0.3963377774 * a + 0.2158037573 * b) ** 3;
+  const m = (l0 - 0.1055613458 * a - 0.0638541728 * b) ** 3;
+  const s = (l0 - 0.0894841775 * a - 1.291485548 * b) ** 3;
   return [
-    gamma(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
-    gamma(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
-    gamma(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+    encode(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+    encode(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+    encode(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
     alpha,
   ];
 }
+function lightDarkColor(value: string, scheme: Scheme): Color | null {
+  const pair = callArgs(value, "light-dark");
+  if (!pair) return null;
+  if (pair.length !== 2) throw new Error(`Invalid light-dark: ${value}`);
+  return parseColor(pair[scheme === "light" ? 0 : 1]!, scheme);
+}
+/** The colour and percentage of `color-mix(in oklab, <color> N%, transparent)`, the one mix Studio uses. */
+function mixShare(args: string[], value: string): RegExpMatchArray {
+  const share = args.length === 3 ? args[1]!.match(/^(.+)\s+([\d.]+)%$/) : null;
+  if (!share || `${args[0]}|${args[2]}` !== "in oklab|transparent")
+    throw new Error(`Only a mix with transparent is supported: ${value}`);
+  return share;
+}
+function mixColor(value: string, scheme: Scheme): Color | null {
+  const args = callArgs(value, "color-mix");
+  if (!args) return null;
+  const share = mixShare(args, value);
+  const color = parseColor(share[1]!, scheme);
+  return [color[0], color[1], color[2], (color[3] * Number(share[2])) / 100];
+}
+const SIMPLE: [RegExp, (body: string) => Color][] = [
+  [/^oklch\(([^()]+)\)$/, oklchColor],
+  [/^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i, hexColor],
+  [/^rgba?\(([^)]+)\)$/, rgbColor],
+];
+function simpleColor(value: string): Color {
+  for (const [pattern, parse] of SIMPLE) {
+    const match = value.match(pattern);
+    if (match) return parse(match[1]!);
+  }
+  throw new Error(`Unsupported sRGB color: ${value}`);
+}
 /** `light-dark()`, `color-mix(in oklab, <color> N%, transparent)`, `oklch()`, hex and rgb. */
 export function parseColor(value: string, scheme: Scheme = "dark"): Color {
-  const pair = callArgs(value, "light-dark");
-  if (pair) {
-    if (pair.length !== 2) throw new Error(`Invalid light-dark: ${value}`);
-    return parseColor(pair[scheme === "light" ? 0 : 1]!, scheme);
-  }
-  const mix = callArgs(value, "color-mix");
-  if (mix) {
-    const share = mix[1]?.match(/^(.+)\s+([\d.]+)%$/);
-    if (mix.length !== 3 || mix[0] !== "in oklab" || mix[2] !== "transparent" || !share)
-      throw new Error(`Only a mix with transparent is supported: ${value}`);
-    const color = parseColor(share[1]!, scheme);
-    return [color[0], color[1], color[2], (color[3] * Number(share[2])) / 100];
-  }
-  const oklch = value.match(/^oklch\(([^()]+)\)$/);
-  if (oklch) return oklchColor(oklch[1]!);
-  const hex = value.match(/^#([\da-f]{3,4}|[\da-f]{6}|[\da-f]{8})$/i);
-  if (hex) return hexColor(hex[1]!);
-  const rgb = value.match(/^rgba?\(([^)]+)\)$/);
-  if (!rgb) throw new Error(`Unsupported sRGB color: ${value}`);
-  return rgbColor(rgb[1]!);
+  return lightDarkColor(value, scheme) ?? mixColor(value, scheme) ?? simpleColor(value);
 }
 export function composite(foreground: Color, background: Color): Color {
   if (background[3] !== 1) throw new Error("Compositing requires an opaque backing");

@@ -385,7 +385,7 @@ export const AnimationCard = memo(function AnimationCard({
             )}
 
             {animation.method === "fromTo" && Object.keys(animation.properties).length > 0 && (
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-accent-ink/70">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
                 To
               </p>
             )}

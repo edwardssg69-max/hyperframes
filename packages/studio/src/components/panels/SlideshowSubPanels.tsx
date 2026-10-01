@@ -174,7 +174,7 @@ export function SlideInspector({
           <span className="text-[11px] text-neutral-400">Fragment hold-points</span>
           <button
             type="button"
-            className="text-[10px] px-2 py-0.5 rounded-sm bg-neutral-700 hover:bg-neutral-600 text-neutral-200 transition-colors"
+            className="text-[10px] px-2 py-0.5 rounded-sm bg-hover hover:bg-press text-neutral-200 transition-colors"
             onClick={onMarkFragment}
             title={`Mark ${currentTime.toFixed(2)}s as hold-point`}
           >
@@ -260,7 +260,7 @@ export function BranchTree({
         />
         <button
           type="button"
-          className="px-2 py-1 rounded-sm bg-neutral-700 hover:bg-neutral-600 text-[11px] text-neutral-200 transition-colors shrink-0"
+          className="px-2 py-1 rounded-sm bg-hover hover:bg-press text-[11px] text-neutral-200 transition-colors shrink-0"
           onClick={handleCreate}
         >
           Add
@@ -527,7 +527,7 @@ export function HotspotTool({
                 ? "Choose a target branch first"
                 : undefined
           }
-          className="px-3 py-1.5 rounded-sm bg-studio-accent/80 enabled:hover:bg-studio-accent enabled:active:scale-[0.98] text-on-accent text-[11px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="px-3 py-1.5 rounded-sm bg-accent enabled:hover:bg-accent-hover enabled:active:scale-[0.98] text-on-accent text-[11px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={handleMakeHotspot}
         >
           Make hotspot
