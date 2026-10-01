@@ -193,7 +193,7 @@ export function ContextMenu({
               </button>
               <button
                 onClick={commitRename}
-                className="px-2 py-0.5 text-[10px] rounded-sm bg-studio-accent/80 hover:bg-studio-accent text-white transition-colors"
+                className="px-2 py-0.5 text-[10px] rounded-sm bg-studio-accent/80 hover:bg-studio-accent text-on-accent transition-colors"
               >
                 Rename
               </button>

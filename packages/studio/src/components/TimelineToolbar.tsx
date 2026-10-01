@@ -309,9 +309,9 @@ export function TimelineToolbar({
                       ? flatDisabled
                       : `${flatBtn} active:scale-[0.98] hover:bg-white/6 ${
                           keyframeState === "active"
-                            ? "text-studio-accent"
+                            ? "text-accent-ink"
                             : keyframeState === "inactive"
-                              ? "text-neutral-400 hover:text-studio-accent"
+                              ? "text-neutral-400 hover:text-accent-ink"
                               : "text-neutral-600 hover:text-neutral-400"
                         }`
                   }
@@ -479,7 +479,7 @@ export function TimelineToolbar({
               onClick={() => setThumbnailMode(thumbnailsVisible ? "hidden" : "adaptive")}
               className={`h-7 px-2 rounded-md text-[11px] font-medium transition-colors ${
                 thumbnailsVisible
-                  ? "bg-studio-accent/10 text-studio-accent"
+                  ? "bg-studio-accent/10 text-accent-ink"
                   : "text-neutral-400 hover:bg-white/6 hover:text-neutral-200"
               }`}
             >
@@ -494,7 +494,7 @@ export function TimelineToolbar({
               aria-pressed={zoomMode === "fit"}
               className={`h-7 px-2 rounded-md text-[11px] font-medium transition-colors ${
                 zoomMode === "fit"
-                  ? "bg-studio-accent/10 text-studio-accent"
+                  ? "bg-studio-accent/10 text-accent-ink"
                   : "text-neutral-400 hover:bg-white/6 hover:text-neutral-200"
               }`}
             >

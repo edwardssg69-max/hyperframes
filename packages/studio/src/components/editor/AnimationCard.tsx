@@ -201,7 +201,7 @@ export const AnimationCard = memo(function AnimationCard({
         className="flex w-full items-center gap-2 py-1.5 active:scale-[0.99]"
       >
         <span
-          className="rounded-sm bg-panel-accent/10 px-1.5 py-0.5 text-[10px] font-semibold text-panel-accent"
+          className="rounded-sm bg-panel-accent/10 px-1.5 py-0.5 text-[10px] font-semibold text-accent-ink"
           title={METHOD_TOOLTIPS[animation.method]}
         >
           {methodLabel}
@@ -385,7 +385,7 @@ export const AnimationCard = memo(function AnimationCard({
             )}
 
             {animation.method === "fromTo" && Object.keys(animation.properties).length > 0 && (
-              <p className="text-[9px] font-semibold uppercase tracking-wider text-panel-accent/70">
+              <p className="text-[9px] font-semibold uppercase tracking-wider text-accent-ink/70">
                 To
               </p>
             )}

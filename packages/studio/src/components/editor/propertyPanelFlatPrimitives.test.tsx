@@ -60,7 +60,7 @@ describe("FlatRow", () => {
       />,
     );
     const value = host.querySelector('[data-flat-row-value="true"]');
-    expect(value?.className).toContain("text-panel-accent");
+    expect(value?.className).toContain("text-accent-ink");
     const reset = host.querySelector<HTMLButtonElement>('[data-flat-row-reset="true"]');
     expect(reset).not.toBeNull();
     act(() => reset?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
@@ -1172,7 +1172,7 @@ describe("FlatSelectRow", () => {
       />,
     );
     const select = host.querySelector<HTMLSelectElement>("select");
-    expect(select?.className).toContain("text-panel-accent");
+    expect(select?.className).toContain("text-accent-ink");
     const reset = host.querySelector<HTMLButtonElement>('[data-flat-select-reset="true"]');
     act(() => reset?.dispatchEvent(new MouseEvent("click", { bubbles: true })));
     expect(onReset).toHaveBeenCalledTimes(1);

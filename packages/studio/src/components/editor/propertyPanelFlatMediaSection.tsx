@@ -200,7 +200,7 @@ export function FlatMediaSection({
               data-flat-media-remove-bg="true"
               disabled={!canRemoveBackground || removeBusy}
               onClick={() => void runBackgroundRemoval()}
-              className="flex items-center gap-1 text-[10px] font-medium text-panel-accent disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex items-center gap-1 text-[10px] font-medium text-accent-ink disabled:cursor-not-allowed disabled:opacity-50"
               title={
                 canRemoveBackground
                   ? "Remove background and save a transparent asset"

@@ -165,7 +165,7 @@ export const TimelineClip = memo(function TimelineClip({
               width: 2,
               borderRadius: 1,
               background: "var(--clip-handle)",
-              opacity: handleOpacity * 0.6,
+              opacity: handleOpacity,
             }}
           />
         </div>
@@ -195,7 +195,7 @@ export const TimelineClip = memo(function TimelineClip({
               width: 2,
               borderRadius: 1,
               background: "var(--clip-handle)",
-              opacity: handleOpacity * 0.6,
+              opacity: handleOpacity,
             }}
           />
         </div>

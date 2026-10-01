@@ -37,8 +37,7 @@
             "packages/studio/src/player/components/TimelineLanes.tsx:270",
             "packages/studio/src/player/components/TimelineLanes.tsx:353",
             "packages/studio/src/player/components/TimelineLanes.tsx:357"
-          ],
-          "opacity": 0.5
+          ]
         },
         {
           "id": "clip-label",
@@ -138,7 +137,7 @@
             "packages/studio/src/player/components/timelineTheme.ts:86",
             "packages/studio/src/styles/components.css:155"
           ],
-          "opacity": 0.492
+          "opacity": 0.82
         },
         {
           "id": "active-selected-handle",
@@ -154,7 +153,7 @@
             "packages/studio/src/styles/components.css:165",
             "packages/studio/src/styles/components.css:175"
           ],
-          "opacity": 0.492
+          "opacity": 0.82
         },
         {
           "id": "hovered-handle",
@@ -168,7 +167,7 @@
             "packages/studio/src/player/components/timelineTheme.ts:87",
             "packages/studio/src/styles/components.css:195"
           ],
-          "opacity": 0.456
+          "opacity": 0.76
         },
         {
           "id": "active-hovered-handle",
@@ -188,7 +187,7 @@
             "packages/studio/src/styles/components.css:165",
             "packages/studio/src/styles/components.css:175"
           ],
-          "opacity": 0.456
+          "opacity": 0.76
         },
         {
           "id": "dragging-handle",
@@ -202,7 +201,7 @@
             "packages/studio/src/player/components/timelineTheme.ts:85",
             "packages/studio/src/styles/components.css:213"
           ],
-          "opacity": 0.57
+          "opacity": 0.95
         },
         {
           "id": "active-dragging-handle",
@@ -222,7 +221,7 @@
             "packages/studio/src/styles/components.css:165",
             "packages/studio/src/styles/components.css:175"
           ],
-          "opacity": 0.57
+          "opacity": 0.95
         },
         {
           "id": "quiet-waveform",
@@ -308,7 +307,8 @@
     },
     {
       "id": "paper",
-      "selector": ":root[data-theme=\"paper\"]",
+      "selector": ["@theme static", ":root[data-theme=\"paper\"]"],
+      "scheme": "light",
       "canvas": "--timeline-shell-bg",
       "pairs": [
         {
@@ -341,7 +341,8 @@
     },
     {
       "id": "paper",
-      "selector": ":root[data-theme=\"paper\"]",
+      "selector": ["@theme static", ":root[data-theme=\"paper\"]"],
+      "scheme": "light",
       "canvas": "--timeline-row-bg",
       "pairs": [
         {
@@ -365,6 +366,725 @@
             "packages/studio/src/styles/theme.css",
             "packages/studio/src/styles/components.css"
           ]
+        }
+      ]
+    },
+    {
+      "id": "chrome-dark",
+      "selector": "@theme static",
+      "canvas": "--color-bg-0",
+      "pairs": [
+        {
+          "id": "secondary-text-on-shell",
+          "foreground": "--color-text-2",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-raised",
+          "foreground": "--color-text-2",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-field",
+          "foreground": "--color-text-2",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-raised-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-pressed",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-on",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-on-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-shell",
+          "foreground": "--color-text-muted",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-raised",
+          "foreground": "--color-text-muted",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-field",
+          "foreground": "--color-text-muted",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-hover",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-raised-hover",
+          "foreground": "--color-text-muted",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-pressed",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-on",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-shell",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-field",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-pressed",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-on",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-on-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised-on-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-shell",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-raised",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-field",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel-hover",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-raised-hover",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel-pressed",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-shell",
+          "foreground": "--color-text-off",
+          "background": ["--color-bg-0"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-panel",
+          "foreground": "--color-text-off",
+          "background": ["--color-surface"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-raised",
+          "foreground": "--color-text-off",
+          "background": ["--color-raised"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-field",
+          "foreground": "--color-text-off",
+          "background": ["--color-input"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-shell",
+          "foreground": "--color-ring",
+          "background": ["--color-bg-0"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-panel",
+          "foreground": "--color-ring",
+          "background": ["--color-surface"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-raised",
+          "foreground": "--color-ring",
+          "background": ["--color-raised"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-accent",
+          "foreground": "--color-on-accent",
+          "background": ["--color-accent"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-accent-hover",
+          "foreground": "--color-on-accent",
+          "background": ["--color-accent-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-danger",
+          "foreground": "--color-on-danger",
+          "background": ["--color-danger"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        }
+      ]
+    },
+    {
+      "id": "chrome-light",
+      "selector": ["@theme static", ":root[data-theme=\"paper\"]"],
+      "scheme": "light",
+      "canvas": "--color-bg-0",
+      "pairs": [
+        {
+          "id": "secondary-text-on-shell",
+          "foreground": "--color-text-2",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-raised",
+          "foreground": "--color-text-2",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-field",
+          "foreground": "--color-text-2",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-raised-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-pressed",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-on",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "secondary-text-on-panel-on-hover",
+          "foreground": "--color-text-2",
+          "background": ["--color-surface", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-shell",
+          "foreground": "--color-text-muted",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-raised",
+          "foreground": "--color-text-muted",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-field",
+          "foreground": "--color-text-muted",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-hover",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-raised-hover",
+          "foreground": "--color-text-muted",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-pressed",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "muted-text-on-panel-on",
+          "foreground": "--color-text-muted",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-shell",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-field",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-pressed",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-on",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-on"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-panel-on-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-surface", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "accent-text-on-raised-on-hover",
+          "foreground": "--color-accent-ink",
+          "background": ["--color-raised", "--color-on-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-shell",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-bg-0"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-raised",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-raised"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-field",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-input"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel-hover",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-raised-hover",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-raised", "--color-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "danger-text-on-panel-pressed",
+          "foreground": "--color-danger-ink",
+          "background": ["--color-surface", "--color-press"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-shell",
+          "foreground": "--color-text-off",
+          "background": ["--color-bg-0"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-panel",
+          "foreground": "--color-text-off",
+          "background": ["--color-surface"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-raised",
+          "foreground": "--color-text-off",
+          "background": ["--color-raised"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "disabled-text-on-field",
+          "foreground": "--color-text-off",
+          "background": ["--color-input"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-shell",
+          "foreground": "--color-ring",
+          "background": ["--color-bg-0"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-panel",
+          "foreground": "--color-ring",
+          "background": ["--color-surface"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "focus-ring-on-raised",
+          "foreground": "--color-ring",
+          "background": ["--color-raised"],
+          "role": "graphic",
+          "minimum": 3,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-accent",
+          "foreground": "--color-on-accent",
+          "background": ["--color-accent"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-accent-hover",
+          "foreground": "--color-on-accent",
+          "background": ["--color-accent-hover"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
+        },
+        {
+          "id": "on-danger",
+          "foreground": "--color-on-danger",
+          "background": ["--color-danger"],
+          "role": "text",
+          "minimum": 4.5,
+          "sources": ["packages/studio/src/styles/theme.css"]
         }
       ]
     }

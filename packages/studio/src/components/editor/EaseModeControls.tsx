@@ -59,7 +59,7 @@ export const EasePresetGrid = function EasePresetGrid({
             <MiniCurveSvg ease={preset.ease} active={isActive} />
             <span
               className={`text-center text-[8px] leading-none ${
-                isActive ? "text-panel-accent" : "text-neutral-500"
+                isActive ? "text-accent-ink" : "text-neutral-500"
               }`}
             >
               {preset.label}

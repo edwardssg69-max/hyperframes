@@ -126,7 +126,8 @@ export function StudioHeader({
               aria-pressed={inspectorButtonActive}
               className={cn(
                 "h-full rounded-none",
-                inspectorButtonActive && "bg-hover text-accent enabled:hover:text-accent",
+                inspectorButtonActive &&
+                  "bg-on text-accent-ink enabled:hover:bg-on-hover enabled:hover:text-accent-ink",
               )}
               icon={<InspectorIcon size={16} />}
               onClick={() => {

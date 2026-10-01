@@ -109,7 +109,7 @@ export function PromptPreviewModal({
                 ? "bg-emerald-500 text-white"
                 : copyState === "failed"
                   ? "bg-red-500 text-white"
-                  : "bg-studio-accent/90 text-neutral-950 hover:bg-studio-accent"
+                  : "bg-studio-accent/90 text-on-accent hover:bg-studio-accent"
             }`}
             onClick={handleCopy}
           >

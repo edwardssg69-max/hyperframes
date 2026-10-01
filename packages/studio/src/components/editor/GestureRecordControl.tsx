@@ -78,7 +78,7 @@ export function GestureRecordBadge({
       className={`pointer-events-auto absolute z-20 flex h-7 w-7 items-center justify-center rounded-full border shadow-lg transition-colors ${
         recording
           ? "border-red-400/60 bg-red-500 text-white animate-pulse"
-          : "border-studio-accent/60 bg-neutral-950 text-studio-accent hover:bg-neutral-900"
+          : "border-studio-accent/60 bg-neutral-950 text-accent-ink hover:bg-neutral-900"
       }`}
       style={{
         left: Math.max(0, rect.left + rect.width + 8),

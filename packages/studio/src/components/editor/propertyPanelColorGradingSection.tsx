@@ -120,7 +120,7 @@ function HoldBeforeButton({
       }}
       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded transition-colors ${
         active
-          ? "bg-studio-accent text-black"
+          ? "bg-studio-accent text-on-accent"
           : "text-panel-text-4 hover:bg-panel-hover hover:text-panel-text-1"
       } disabled:cursor-not-allowed disabled:opacity-40`}
       title="Hold to show original"

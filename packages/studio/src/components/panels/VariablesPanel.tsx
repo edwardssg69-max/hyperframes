@@ -175,9 +175,7 @@ function PreviewModeHeader({
         <span className="text-[11px] font-semibold text-neutral-200">Variables</span>
         <span
           className={`rounded-full px-2 py-0.5 text-[9px] font-medium ${
-            hasOverrides
-              ? "bg-studio-accent/20 text-studio-accent"
-              : "bg-neutral-800 text-neutral-500"
+            hasOverrides ? "bg-studio-accent/20 text-accent-ink" : "bg-neutral-800 text-neutral-500"
           }`}
         >
           {hasOverrides ? `Previewing ${overrideCount} custom` : "Previewing defaults"}

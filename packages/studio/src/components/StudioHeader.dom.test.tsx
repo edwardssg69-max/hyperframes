@@ -139,16 +139,16 @@ it("shows Inspector pressed and filled only when on", () => {
   const host = mount({ inspectorButtonActive: true });
   const on = query(host, '[aria-label="Inspector"]');
   expect(on.getAttribute("aria-pressed")).toBe("true");
-  expect(hasToken(on.className, "text-accent")).toBe(true);
-  expect(hasToken(on.className, "bg-hover")).toBe(true);
+  expect(hasToken(on.className, "text-accent-ink")).toBe(true);
+  expect(hasToken(on.className, "bg-on")).toBe(true);
   act(() => mounted?.root.unmount());
   mounted?.host.remove();
   mounted = null;
 
   const off = query(mount(), '[aria-label="Inspector"]');
   expect(off.getAttribute("aria-pressed")).toBe("false");
-  expect(hasToken(off.className, "text-accent")).toBe(false);
-  expect(hasToken(off.className, "bg-hover")).toBe(false);
+  expect(hasToken(off.className, "text-accent-ink")).toBe(false);
+  expect(hasToken(off.className, "bg-on")).toBe(false);
 });
 
 it("keeps Capture a real download link rather than a button", () => {

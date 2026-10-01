@@ -527,7 +527,7 @@ export function HotspotTool({
                 ? "Choose a target branch first"
                 : undefined
           }
-          className="px-3 py-1.5 rounded-sm bg-studio-accent/80 enabled:hover:bg-studio-accent enabled:active:scale-[0.98] text-white text-[11px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="px-3 py-1.5 rounded-sm bg-studio-accent/80 enabled:hover:bg-studio-accent enabled:active:scale-[0.98] text-on-accent text-[11px] font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           onClick={handleMakeHotspot}
         >
           Make hotspot

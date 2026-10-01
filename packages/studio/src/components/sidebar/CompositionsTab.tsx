@@ -337,7 +337,7 @@ function CompCard({
             event.stopPropagation();
             onAddToTimeline();
           }}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-neutral-600 opacity-0 transition-[color,background-color,opacity] hover:bg-neutral-800 hover:text-studio-accent group-hover/card:opacity-100 group-focus-within/card:opacity-100 focus:opacity-100"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-neutral-600 opacity-0 transition-[color,background-color,opacity] hover:bg-neutral-800 hover:text-accent-ink group-hover/card:opacity-100 group-focus-within/card:opacity-100 focus:opacity-100"
         >
           <span aria-hidden="true">+</span>
         </button>
@@ -358,7 +358,7 @@ function CompCard({
             className={`flex h-6 w-6 shrink-0 items-center justify-center rounded transition-colors ${
               isRendering
                 ? "text-neutral-600 cursor-not-allowed"
-                : "text-neutral-600 hover:text-studio-accent hover:bg-neutral-800"
+                : "text-neutral-600 hover:text-accent-ink hover:bg-neutral-800"
             }`}
           >
             <svg

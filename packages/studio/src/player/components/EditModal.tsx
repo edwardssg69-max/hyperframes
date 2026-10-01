@@ -147,7 +147,7 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose }:
           <div className="px-4 py-2 border-b border-neutral-800/40 max-h-24 overflow-y-auto">
             {elementsInRange.map((el) => (
               <div key={el.id} className="flex items-center justify-between py-0.5">
-                <span className="text-[10px] font-mono text-studio-accent/80">#{el.id}</span>
+                <span className="text-[10px] font-mono text-accent-ink/80">#{el.id}</span>
                 <span className="text-[10px] text-neutral-600">{el.tag}</span>
               </div>
             ))}
@@ -195,12 +195,12 @@ export function EditPopover({ rangeStart, rangeEnd, anchorX, anchorY, onClose }:
             className={`py-1.5 text-[11px] font-medium rounded-lg transition-all ${
               copiedAgentPrompt
                 ? "bg-green-500/20 text-green-400 border border-green-500/30"
-                : "bg-studio-accent/15 text-studio-accent border border-studio-accent/25 hover:bg-studio-accent/25"
+                : "bg-studio-accent/15 text-accent-ink border border-studio-accent/25 hover:bg-studio-accent/25"
             }`}
           >
             {copiedAgentPrompt ? "Copied!" : "Copy to Agent"}
             {!copiedAgentPrompt && (
-              <span className="text-[9px] text-studio-accent/50 ml-1.5">Cmd+Enter</span>
+              <span className="text-[9px] text-accent-ink/50 ml-1.5">Cmd+Enter</span>
             )}
           </button>
         </div>

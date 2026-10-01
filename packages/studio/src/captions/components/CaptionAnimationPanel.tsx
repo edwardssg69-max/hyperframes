@@ -292,7 +292,7 @@ export const CaptionAnimationPanel = memo(function CaptionAnimationPanel() {
           onClick={handleApplyToAll}
           disabled={gated}
           title={gated ? "Disabled until animation editing is applied to playback" : undefined}
-          className="w-full py-1.5 rounded-sm border border-neutral-700 text-2xs text-neutral-300 hover:border-studio-accent/50 hover:text-studio-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-neutral-700 disabled:hover:text-neutral-300"
+          className="w-full py-1.5 rounded-sm border border-neutral-700 text-2xs text-neutral-300 hover:border-studio-accent/50 hover:text-accent-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-neutral-700 disabled:hover:text-neutral-300"
         >
           Apply to all groups
         </button>

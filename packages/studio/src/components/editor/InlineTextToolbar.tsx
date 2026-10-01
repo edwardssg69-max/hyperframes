@@ -202,7 +202,7 @@ function ToolbarToggle({
       aria-label={label}
       aria-pressed={on}
       className={`flex h-6 w-6 items-center justify-center rounded-md text-xs ${
-        on ? "bg-studio-accent/20 text-studio-accent" : "text-white/70 hover:bg-white/10"
+        on ? "bg-studio-accent/20 text-accent-ink" : "text-white/70 hover:bg-white/10"
       }`}
       style={{
         fontWeight: bold ? 700 : 400,

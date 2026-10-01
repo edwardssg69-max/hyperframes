@@ -79,7 +79,7 @@ export function LintModal({
               </div>
             ) : (
               <div className="w-8 h-8 rounded-full bg-studio-accent/10 flex items-center justify-center">
-                <CheckCircleIcon size={18} className="text-studio-accent" weight="fill" />
+                <CheckCircleIcon size={18} className="text-accent-ink" weight="fill" />
               </div>
             )}
             <div>
@@ -110,7 +110,7 @@ export function LintModal({
                   ? "bg-green-600 text-white"
                   : copyFailed
                     ? "bg-red-600 text-white"
-                    : "bg-studio-accent hover:bg-studio-accent/80 text-white"
+                    : "bg-studio-accent hover:bg-studio-accent/80 text-on-accent"
               }`}
             >
               {copied
@@ -136,8 +136,8 @@ export function LintModal({
                   {f.file && <p className="text-xs text-neutral-600 font-mono mt-0.5">{f.file}</p>}
                   {f.fixHint && (
                     <div className="flex items-start gap-1 mt-1.5">
-                      <CaretRightIcon size={10} className="text-studio-accent shrink-0 mt-0.5" />
-                      <p className="text-xs text-studio-accent">{f.fixHint}</p>
+                      <CaretRightIcon size={10} className="text-accent-ink shrink-0 mt-0.5" />
+                      <p className="text-xs text-accent-ink">{f.fixHint}</p>
                     </div>
                   )}
                 </div>
@@ -153,8 +153,8 @@ export function LintModal({
                   {f.file && <p className="text-xs text-neutral-600 font-mono mt-0.5">{f.file}</p>}
                   {f.fixHint && (
                     <div className="flex items-start gap-1 mt-1.5">
-                      <CaretRightIcon size={10} className="text-studio-accent shrink-0 mt-0.5" />
-                      <p className="text-xs text-studio-accent">{f.fixHint}</p>
+                      <CaretRightIcon size={10} className="text-accent-ink shrink-0 mt-0.5" />
+                      <p className="text-xs text-accent-ink">{f.fixHint}</p>
                     </div>
                   )}
                 </div>

@@ -301,7 +301,7 @@ function WindowMenu() {
               onClick={() => togglePanel(id)}
               className="flex w-full items-center gap-2 px-3 py-1.5 text-left text-[11px] text-neutral-300 hover:bg-neutral-800"
             >
-              <span className="w-3 text-panel-accent">{openPanels.has(id) ? "✓" : ""}</span>
+              <span className="w-3 text-accent-ink">{openPanels.has(id) ? "✓" : ""}</span>
               {PANEL_DEFINITIONS[id].title}
             </button>
           ))}

@@ -340,7 +340,7 @@ export function GradientField({
                 track("toggle", "Repeat gradient");
                 patch({ repeating: e.target.checked });
               }}
-              className="h-4 w-4 rounded-sm border-neutral-700 bg-neutral-950 text-panel-accent focus:ring-panel-accent"
+              className="h-4 w-4 rounded-sm border-neutral-700 bg-neutral-950 text-accent-ink focus:ring-panel-accent"
             />
             Repeat
           </label>

@@ -214,7 +214,7 @@ export function FlatColorGradingSection({
           <button
             type="button"
             onClick={onRequestPresetPreviews}
-            className="text-[10px] font-medium text-panel-accent hover:text-panel-accent/80"
+            className="text-[10px] font-medium text-accent-ink hover:text-accent-ink/80"
           >
             Retry look previews
           </button>
@@ -519,7 +519,7 @@ export function FlatColorGradingSection({
               track("button", "Apply grade to scope");
               onApplyToScope();
             }}
-            className="text-[11px] font-medium text-panel-accent hover:text-panel-accent/80 disabled:cursor-not-allowed disabled:opacity-50"
+            className="text-[11px] font-medium text-accent-ink hover:text-accent-ink/80 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {applyBusy ? "Applying" : "Apply"}
           </button>

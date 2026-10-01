@@ -73,7 +73,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
           type="button"
           className={`rounded-md p-1.5 transition-colors active:scale-[0.95] ${
             motionPathArmed
-              ? "bg-studio-accent/20 text-studio-accent"
+              ? "bg-studio-accent/20 text-accent-ink"
               : "bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80"
           }`}
           onClick={() => setMotionPathArmed(!motionPathArmed)}
@@ -99,7 +99,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
             type="button"
             className={`rounded-md p-1.5 transition-colors active:scale-[0.95] ${
               visible
-                ? "bg-studio-accent/20 text-studio-accent"
+                ? "bg-studio-accent/20 text-accent-ink"
                 : "bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80"
             }`}
             onClick={toggle}
@@ -115,7 +115,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
         type="button"
         className={`rounded-md p-1.5 transition-colors active:scale-[0.95] ${
           prefs.snapEnabled
-            ? "bg-studio-accent/20 text-studio-accent"
+            ? "bg-studio-accent/20 text-accent-ink"
             : "bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80"
         }`}
         onClick={toggleSnap}
@@ -131,7 +131,7 @@ export const SnapToolbar = memo(function SnapToolbar() {
           type="button"
           className={`rounded-md p-1.5 transition-colors active:scale-[0.95] ${
             prefs.gridVisible
-              ? "bg-studio-accent/20 text-studio-accent"
+              ? "bg-studio-accent/20 text-accent-ink"
               : "bg-black/40 text-white/60 hover:bg-black/60 hover:text-white/80"
           }`}
           onClick={toggleGrid}
