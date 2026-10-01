@@ -16,8 +16,10 @@ import {
   sameFiles,
   selectTarget,
   settled,
+  saveFault,
   sleep,
   smoothness,
+  timedWrite,
   waitForFiles,
 } from "./case.mjs";
 import { scoreTeleport, stopFrames } from "./teleport.mjs";
@@ -115,16 +117,23 @@ function mergeSmooth(parts) {
 /** Undo (or redo) once per entry, each landing on that entry's file; stops at the first write that never lands. */
 // fallow-ignore-next-line complexity
 async function walk(ctx, keys, entries, current) {
-  const landed = [];
+  const [landed, writes] = [[], []];
   for (const want of entries) {
     await blurPreview(ctx.page);
+    const since = Date.now();
     await chord(ctx.page, keys);
-    const w = await waitForFiles(ctx, { from: current, timeout: 15_000 });
+    const w = await timedWrite(ctx, current, since);
+    writes.push(w);
     landed.push(w.reached && Boolean(want) && sameFiles(w.files, want));
     current = w.files;
     if (!w.reached) break;
   }
-  return { ok: landed.length === entries.length && landed.every(Boolean), landed, current };
+  return {
+    ok: landed.length === entries.length && landed.every(Boolean),
+    landed,
+    writes,
+    current,
+  };
 }
 
 // fallow-ignore-next-line complexity
@@ -378,12 +387,14 @@ async function measureSequence({ spec, dir, files, evidence }, session, control,
       redoBytes: redo.ok,
       redoBox: redone && quadDistance(redone.visible, committed.visible),
     },
-    undoTimeout:
-      undo.landed.length < stack.length
-        ? "undo"
-        : undo.ok && redo.landed.length < stack.length
-          ? "redo"
-          : null,
+    undoTimeout: saveFault([
+      ...undo.writes.map((w) => ["undo", w]),
+      ...(redo.writes ?? []).map((w) => ["redo", w]),
+    ]),
+    saveMs: {
+      undo: undo.writes.map((w) => w.ms ?? null),
+      redo: (redo.writes ?? []).map((w) => w.ms ?? null),
+    },
     smooth: { ...mergeSmooth(state.smooth), control },
     unsettled: Object.keys(quads).filter((k) => quads[k].unsettled),
     steps: steps.map(({ teleport, ...s }) => ({

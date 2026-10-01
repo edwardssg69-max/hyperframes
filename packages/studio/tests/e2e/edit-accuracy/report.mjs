@@ -69,7 +69,11 @@ export function score(spec, r) {
     drop: r.drop <= LIMIT_PX,
     reload: r.reload <= LIMIT_PX,
     render: r.render !== null && r.render <= LIMIT_PX,
-    undo: r.undo.bytes && r.undo.redoBytes && Math.max(r.undo.box, r.undo.redoBox) <= LIMIT_PX,
+    undo:
+      !r.undoTimeout &&
+      r.undo.bytes &&
+      r.undo.redoBytes &&
+      Math.max(r.undo.box, r.undo.redoBox) <= LIMIT_PX,
     // Only drops beyond the blank page's, driven the same way in the same Chrome, are the edit's.
     smooth:
       smooth.dropped <= smooth.control.dropped &&
@@ -131,7 +135,8 @@ function summarize(results, seconds) {
     },
     perMetric,
     unsettled: measured.filter((r) => r.unsettled.length).length,
-    undoTimeouts: measured.filter((r) => r.undoTimeout).length,
+    lateSaves: measured.filter((r) => r.undoTimeout?.endsWith("late")).length,
+    lostSaves: measured.filter((r) => r.undoTimeout?.endsWith("lost")).length,
     renderErrors: measured.filter((r) => r.renderError).length,
     smooth: smoothSummary(measured),
     seconds: Math.round(seconds),
@@ -153,7 +158,7 @@ function table(summary, meta, results) {
     "",
     `Undo or redo left different bytes in ${summary.bytesDiffer.undo} undo and ${summary.bytesDiffer.redo} redo cases.`,
     `The preview never held still for 1 s within 15 s in ${summary.unsettled} cases; the metrics that snapshot feeds fail.`,
-    `An undo or redo write never landed within 15 s in ${summary.undoTimeouts} cases; undo fails there.`,
+    `An undo or redo write landed late (over 15 s) in ${summary.lateSaves} cases and never landed (60 s) in ${summary.lostSaves}; undo fails in both.`,
     `The producer failed to render ${summary.renderErrors} cases; render fails there.`,
     `Smoothness: ${summary.smooth.unknown} cases with unknown work; dropped frames per case (median/max) ${summary.smooth.dropped}, blank-page control ${summary.smooth.control}; raw rAF p95 (median/max) ${summary.smooth.p95} ms, control ${summary.smooth.controlP95} ms.`,
     "",
@@ -192,7 +197,7 @@ export function entry(r) {
     work: roundUp(r.smooth.workP95),
     frameP95: roundUp(r.smooth.p95),
     ...(r.unsettled.length && { unsettled: r.unsettled }),
-    ...(r.undoTimeout && { undoTimeout: r.undoTimeout }),
+    ...(r.undoTimeout && { undoTimeout: r.undoTimeout, saveMs: r.saveMs }),
     ...(r.renderError && { renderError: true }),
   };
 }

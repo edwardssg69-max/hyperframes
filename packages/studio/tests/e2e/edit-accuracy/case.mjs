@@ -146,10 +146,30 @@ export async function waitForFiles(ctx, { from, want, timeout = 5000 }) {
     const now = readFiles(ctx.dir, ctx.files);
     if (!sameFiles(now, last)) [last, stableSince] = [now, Date.now()];
     const reached = want ? sameFiles(now, want) : !from || !sameFiles(now, from);
-    if (reached && Date.now() - stableSince >= 300) return { reached: true, files: now };
+    if (reached && Date.now() - stableSince >= 300)
+      return { reached: true, files: now, at: stableSince };
   }
   return { reached: false, files: last };
 }
+
+const SAVE_MS = 15_000;
+const LOST_MS = 60_000;
+
+/**
+ * The write an undo or redo key pressed at `since` causes, timed: one slower than SAVE_MS is late
+ * (a Studio bug, but the case still continues), one missing after LOST_MS is lost.
+ */
+export async function timedWrite(ctx, from, since) {
+  const w = await waitForFiles(ctx, { from, timeout: LOST_MS });
+  const ms = w.reached ? w.at - since : null;
+  return { ...w, ms, late: w.reached && ms > SAVE_MS };
+}
+
+/** "undo late", "redo lost" and so on, or null when every write landed in time. */
+export const saveFault = (writes) =>
+  writes
+    .map(([name, w]) => (!w.reached ? `${name} lost` : w.late ? `${name} late` : null))
+    .find(Boolean) ?? null;
 
 // fallow-ignore-next-line complexity
 async function previewCandidate(frame, selector) {
@@ -683,18 +703,20 @@ async function measureCase(
   evidence.files = committedFiles;
   const saved = !sameFiles(committedFiles, original);
 
-  // Undo and redo run before any reload. Each waits up to 15 s for its own write; redo waits for undo.
-  const landed = (from) =>
-    saved ? waitForFiles(ctx, { from, timeout: 15_000 }) : { reached: true, files: from };
+  // Undo and redo run before any reload, each timed against its own write; redo waits for undo.
+  const landed = (from, since) =>
+    saved ? timedWrite(ctx, from, since) : { reached: true, files: from, ms: null, late: false };
+  let since = Date.now();
   await chord(page, "Control+z");
-  const undo = await landed(committedFiles);
+  const undo = await landed(committedFiles, since);
   const undone = await settled(ctx);
   await shoot("undone");
   let [redo, redone] = [{ reached: false }, null];
   if (undo.reached) {
     await blurPreview(page);
+    since = Date.now();
     await chord(page, "Control+Shift+z");
-    redo = await landed(undo.files);
+    redo = await landed(undo.files, since);
     redone = await settled(ctx);
   }
   // A late write must not land under the reload.
@@ -729,8 +751,14 @@ async function measureCase(
       redoBytes: saved && redo.reached && sameFiles(redo.files, committedFiles),
       redoBox: redone && quadDistance(redone.visible, committed.visible),
     },
-    // Which write never landed within 15 s; a redo that was never sent is untested, so undo fails.
-    undoTimeout: saved && !undo.reached ? "undo" : saved && !redo.reached ? "redo" : null,
+    // A late or lost undo or redo write fails undo; a redo that was never sent is untested.
+    undoTimeout: saved
+      ? saveFault([
+          ["undo", undo],
+          ["redo", redo],
+        ])
+      : null,
+    saveMs: { undo: undo.ms ?? null, redo: redo.ms ?? null },
     smooth: { ...drive.smooth, control },
     unsettled: Object.keys(quads).filter((k) => quads[k].unsettled),
     reloaded,
