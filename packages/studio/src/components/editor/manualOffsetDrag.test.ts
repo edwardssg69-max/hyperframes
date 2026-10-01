@@ -686,7 +686,7 @@ describe("a resize's anchor member", () => {
     expect(member.element.style.getPropertyValue("translate")).toBe("-10.25px 3.5px");
   });
 
-  it.each(["width", "maxWidth", "minHeight", "flexBasis", "scale"])(
+  it.each(["width", "maxWidth", "minHeight", "flexBasis", "scale", "scaleX"])(
     "leaves a box whose %s GSAP tweens, which the CSS box writer also sets, to the GSAP writer",
     (channel) => {
       expect(anchorMember({ [channel]: 300 }).plainTranslate).toBe(false);

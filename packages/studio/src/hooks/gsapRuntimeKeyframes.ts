@@ -447,9 +447,13 @@ export function gsapWritesPosition(el: Element): boolean {
   return !!cache?.renderTransform || gsapWritesChannels(el, MOVE_CHANNELS);
 }
 
-const BOX_CHANNELS = BOX_SIZE_STYLE_PROPS.map((prop) =>
-  prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()),
-);
+const BOX_CHANNELS = [
+  ...BOX_SIZE_STYLE_PROPS.map((prop) =>
+    prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase()),
+  ),
+  "scaleX",
+  "scaleY",
+];
 
 /** GSAP owns this element's box: its position, or any property the CSS box writer sets. Else a resize writes CSS. */
 export function gsapWritesBox(el: Element): boolean {
