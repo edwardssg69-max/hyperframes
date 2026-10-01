@@ -1,6 +1,7 @@
 import { roundTo3 } from "../../utils/rounding";
-import { gsapWritesPosition } from "../../hooks/gsapRuntimeKeyframes";
-import { readStudioPathOffset } from "./manualEditsDom";
+import { gsapWritesPosition, gsapWritesRotation } from "../../hooks/gsapRuntimeKeyframes";
+import { readCssRotation } from "../../hooks/draggedGsapPosition";
+import { readStudioPathOffset, readStudioRotation } from "./manualEditsDom";
 import { splitTopLevelWhitespace } from "./manualEditsStyleHelpers";
 import type { PatchOperation } from "../../utils/sourcePatcher";
 
@@ -82,4 +83,9 @@ export function writeTranslatePx(el: HTMLElement, p: Point): void {
 /** The position the panel shows and edits: the translate a move writes, unless GSAP positions it. */
 export function readMoveOffset(el: HTMLElement): Point {
   return gsapWritesPosition(el) ? readStudioPathOffset(el) : readTranslatePx(el);
+}
+
+/** The angle the panel shows: its own CSS turn, unless GSAP turns it. */
+export function readShownRotation(el: HTMLElement): { angle: number } {
+  return gsapWritesRotation(el) ? readStudioRotation(el) : { angle: roundTo3(readCssRotation(el)) };
 }
