@@ -71,28 +71,6 @@ export function useDomGeometryCommits({
     [commitPositionPatchToHtml, readOnlyPreview, showToast],
   );
 
-  const handleDomPathOffsetCommit = useCallback(
-    (selection: DomEditSelection, next: { x: number; y: number }) => {
-      if (readOnlyPreview) return Promise.resolve();
-      // ponytail: GSAP-targeted elements are blocked (no SDK position-in-script op); CSS-path
-      // elements fall through to commitPositionPatchToHtml → persistDomEditOperations →
-      // onTrySdkPersist and are already SDK-cut-over as setStyle/setAttribute (§3.3 done).
-      // Upgrade path for GSAP: add a moveElementGsap SDK op in a separate SDK PR.
-      const gsapFallback = rejectGsapCssFallback(selection, previewIframeRef, showToast);
-      if (gsapFallback) return gsapFallback;
-      const before = captureStudioPathOffset(selection.element);
-      applyStudioPathOffset(selection.element, next);
-      return commitPositionPatchToHtml(selection, buildPathOffsetPatches(selection.element), {
-        label: "Move layer",
-        coalesceKey: `path-offset:${getDomEditTargetKey(selection)}`,
-      }).catch((error) => {
-        restoreStudioPathOffset(selection.element, before);
-        throw error;
-      });
-    },
-    [commitPositionPatchToHtml, previewIframeRef, showToast, readOnlyPreview],
-  );
-
   const handleDomBoxSizeCommit = useCallback(
     (
       selection: DomEditSelection,
@@ -181,7 +159,6 @@ export function useDomGeometryCommits({
 
   return {
     stageElementPositionOffset,
-    handleDomPathOffsetCommit,
     handleDomBoxSizeCommit,
     handleDomRotationCommit,
     handleDomManualEditsReset,
