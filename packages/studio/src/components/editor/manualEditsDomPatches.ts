@@ -118,7 +118,7 @@ export function buildClearPathOffsetPatches(element: HTMLElement): PatchOperatio
 
 /* ── Box size patches ────────────────────────────────────────────── */
 
-const BOX_SIZE_STYLE_PROPS = [
+export const BOX_SIZE_STYLE_PROPS = [
   "width",
   "height",
   "min-width",

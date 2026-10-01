@@ -176,6 +176,28 @@ describe("useDomGeometryCommit, from the package entry", () => {
     unmount();
   });
 
+  it("saves a GSAP-free resize as its inline size, with no GSAP script and no animation read", async () => {
+    const calls = stubPatchServer();
+    const { element, recordEdit, hook, unmount } = renderHost();
+
+    await expect(
+      hook().commitBoxSize(makeSelection("card", element), { width: 300, height: 90 }),
+    ).resolves.toEqual({ ok: true });
+
+    expect(element.style.getPropertyValue("width")).toBe("300px");
+    expect(calls.patches).toEqual([
+      expect.objectContaining({
+        operations: expect.arrayContaining([
+          { type: "inline-style", property: "width", value: "300px" },
+          { type: "inline-style", property: "height", value: "90px" },
+        ]),
+      }),
+    ]);
+    expect(calls.urls.filter((url) => url.includes("gsap"))).toEqual([]);
+    expect(recordEdit).toHaveBeenCalledTimes(1);
+    unmount();
+  });
+
   it("puts a GSAP-free element's translate back when its move cannot be saved", async () => {
     stubPatchServer(500);
     const { element, hook, unmount } = renderHost();
