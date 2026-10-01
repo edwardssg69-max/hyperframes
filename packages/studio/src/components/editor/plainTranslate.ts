@@ -85,7 +85,6 @@ export function readMoveOffset(el: HTMLElement): Point {
   return gsapWritesPosition(el) ? readStudioPathOffset(el) : readTranslatePx(el);
 }
 
-/** The angle the panel shows: its own CSS turn, unless GSAP turns it. */
 export function readShownRotation(el: HTMLElement): { angle: number } {
   return gsapWritesRotation(el) ? readStudioRotation(el) : { angle: roundTo3(readCssRotation(el)) };
 }
